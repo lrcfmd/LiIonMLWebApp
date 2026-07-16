@@ -1,0 +1,22 @@
+# Large data files — embedded in Docker image, not tracked in git
+data/trained_models/
+data/element_properties/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+
+# Build artifacts
+*.whl
+
+# Environment
+.env
+
+# Docker
+Dockerfile
+
+# Pytest
+.pytest_cache/
