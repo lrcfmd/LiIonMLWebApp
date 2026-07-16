@@ -1,0 +1,35 @@
+[project]
+name = "liion"
+version = "1.0.0"
+description = "Li-Ionics ML — CrabNet-based lithium solid-state electrolyte conductivity prediction for the LMDS platform"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  # Infrastructure (from app-template, copy-as-is)
+  "jsonschema>=4.26.0",
+  "boto3>=1.34.0",
+  "structlog>=25.5.0",
+  # CrabNet / inference dependencies
+  "torch>=2.0",
+  "numpy>=1.24",
+  "pandas>=2.0",
+  "ElMD>=0.5.12",
+  "tqdm>=4.0",
+  "scikit-learn>=1.3", # used by crab/model.py for metrics (training code, kept as-is)
+  "matplotlib>=3.7",   # used by utils/utils.py (kept as-is)
+  "seaborn>=0.13",     # used by utils/utils.py (kept as-is)
+  # ElMD has a dead `import pkg_resources` that crashes without setuptools.
+  # Pin <80 because setuptools 80+ removed pkg_resources entirely.
+  "setuptools>=69.0,<80",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=4.0"]
+
+[project.scripts]
+model-run = "cmds.run:run_cli"
+model-types = "cmds.model_types:main"
+validate-model = "cmds.validate_model:main"
+
+[tool.uv]
+package = true

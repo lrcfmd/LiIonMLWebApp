@@ -9,9 +9,9 @@ from sklearn.metrics import mean_absolute_error, roc_auc_score, matthews_corrcoe
 import torch
 from torch.optim.lr_scheduler import CyclicLR
 
-from utils.utils import (Lamb, Lookahead, RobustL1, BCEWithLogitsLoss,
+from model.utils.utils import (Lamb, Lookahead, RobustL1, BCEWithLogitsLoss,
                          EDM_CsvLoader, Scaler, DummyScaler, count_parameters)
-from utils.optim import SWA
+from model.utils.optim import SWA
 
 from collections import defaultdict
 

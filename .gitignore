@@ -15,8 +15,5 @@ dist/
 # Environment
 .env
 
-# Docker
-Dockerfile
-
 # Pytest
 .pytest_cache/

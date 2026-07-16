@@ -2,9 +2,9 @@ import os
 
 from time import time
 
-from utils.utils import get_cbfv
+from model.utils.utils import get_cbfv
 
-from utils.estimatorselectionhelper import EstimatorSelectionHelper
+from model.utils.estimatorselectionhelper import EstimatorSelectionHelper
 
 
 # %%

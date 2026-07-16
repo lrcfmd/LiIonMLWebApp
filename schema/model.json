@@ -1,0 +1,64 @@
+{
+  "$schema": "./model.schema.json",
+  "name": "liion",
+  "version": "1.0.0",
+
+  "parameters": {},
+
+  "execution": {
+    "modes": {
+      "instance": {
+        "description": "Predict lithium ionic conductivity for a single composition. Returns a binary classification (1 if conductivity > 1e-4 S/cm, 0 otherwise) and a regression value (predicted conductivity in log10 S/cm).",
+        "response": "immediate",
+        "inputs": {
+          "query": {
+            "type": "string",
+            "required": true,
+            "default": "LiPO3",
+            "description": "Chemical composition (e.g. 'LiPO3', 'NaCl', 'SrTiO3')"
+          }
+        },
+        "outputs": {
+          "query": {
+            "type": "string",
+            "description": "Normalized formula of the query composition"
+          },
+          "classification": {
+            "type": "integer",
+            "description": "1 if predicted conductivity > 1e-4 S/cm, 0 otherwise"
+          },
+          "regression": {
+            "type": "number",
+            "description": "Predicted conductivity in log10(S/cm)"
+          }
+        }
+      },
+
+      "dataset": {
+        "description": "Batch prediction for multiple compositions. Accepts either an inline list of composition strings or a CSV file with a 'composition' column. Runs the same CrabNet classification + regression for each composition and writes all results to a single JSON asset.",
+        "response": "deferred",
+        "inputs": {
+          "compositions": {
+            "type": "array",
+            "items": { "type": "string" },
+            "required": false,
+            "description": "Inline list of compositions to predict (alternative to file, for API-style batch queries)"
+          },
+          "file": {
+            "type": "file",
+            "mime_type": "text/csv",
+            "required": false,
+            "description": "CSV file with a 'composition' column (for large batches, up to ~2000 compositions)"
+          }
+        },
+        "outputs": {
+          "result.json": {
+            "type": "file",
+            "mime_type": "application/json",
+            "description": "JSON with classification and regression predictions for each composition"
+          }
+        }
+      }
+    }
+  }
+}
