@@ -40,3 +40,13 @@ class StorageService:
                 self.logger.debug("downloaded", uri=uri, path=str(local_path))
 
         return downloaded
+
+    def download_to_path(self, uri: str, dest: Path) -> None:
+        """Download a file from an S3 URI to an exact local path."""
+        parsed = urlparse(uri)
+        if parsed.scheme != "s3":
+            raise ValueError(f"Expected s3:// URI, got: {uri}")
+
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        self.s3.download(uri, dest)
+        self.logger.debug("downloaded to path", uri=uri, path=str(dest))

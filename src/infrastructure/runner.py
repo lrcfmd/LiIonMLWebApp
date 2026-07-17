@@ -79,6 +79,15 @@ class ModelRunner:
 
         OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
+        # Download runtime assets before resolving inputs so the handler can
+        # read weights, lookup tables, etc. from their declared paths.
+        assets = exec_config.get("assets", [])
+        if assets and not self.local_mode and self.storage is not None:
+            for asset in assets:
+                target_path = Path(asset["path"])
+                self.storage.download_to_path(asset["uri"], target_path)
+            self.runner_logger.info("Downloaded runtime assets", count=len(assets))
+
         # Route each input field to a value or a file by its wire shape — not by
         # the Mode name. A Mode may freely mix value and file inputs.
         values, files = self._resolve_inputs(inputs)
