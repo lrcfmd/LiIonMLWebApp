@@ -19,18 +19,11 @@ WORKDIR /app
 COPY --from=builder /app/dist/*.whl /app/
 RUN WHEEL=$(ls /app/*.whl) && pip install --no-cache-dir "$WHEEL"
 
-# Bake trained model checkpoints and element property data into the image.
-# These files must exist in data/ before building:
-#   data/trained_models/TransferFinalModel_Reg.pth   — CrabNet regression weights
-#   data/trained_models/TransferFinalModel_Clf.pth   — CrabNet classification weights
-#   data/element_properties/mat2vec.csv              — element embeddings
-COPY data/trained_models/ /app/data/trained_models/
-COPY data/element_properties/ /app/data/element_properties/
+# Trained model weights and element property data are injected at runtime
+# via the LMDS tool assets system (see schema/model.json → assets).
+# Do not COPY them here — they are downloaded into /app/data/ when a run starts.
 
-# Alternatively, mount at runtime and remove the COPY above:
-#   docker run -v /path/to/models:/app/data/trained_models \
-#              -v /path/to/element_properties:/app/data/element_properties ...
-RUN mkdir -p /app/data/output
+RUN mkdir -p /app/data/output /app/data/trained_models /app/data/element_properties
 ENV LIION_MODELS_PATH=/app/data/trained_models
 
 ENTRYPOINT ["model-run"]

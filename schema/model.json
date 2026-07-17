@@ -1,22 +1,26 @@
 {
   "$schema": "./model.schema.json",
-  "name": "liion",
-  "version": "1.0.0",
 
-  "assets": {
-    "data/trained_models/TransferFinalModel_Reg.pth": {
-      "type": "file",
-      "mime_type": "application/octet-stream",
-      "description": "Pre-trained CrabNet regression model weights",
-      "required": true
+    "assets": {
+        "data/trained_models/TransferFinalModel_Reg.pth": {
+            "type": "file",
+            "mime_type": "application/octet-stream",
+            "description": "Pre-trained CrabNet regression model weights",
+            "required": true
+        },
+        "data/trained_models/TransferFinalModel_Clf.pth": {
+            "type": "file",
+            "mime_type": "application/octet-stream",
+            "description": "Pre-trained CrabNet classification model weights",
+            "required": true
+        },
+        "data/element_properties/mat2vec.csv": {
+            "type": "file",
+            "mime_type": "text/csv",
+            "description": "Mat2vec element embedding lookup table",
+            "required": true
+        }
     },
-    "data/trained_models/TransferFinalModel_Clf.pth": {
-      "type": "file",
-      "mime_type": "application/octet-stream",
-      "description": "Pre-trained CrabNet classification model weights",
-      "required": true
-    }
-  },
 
   "parameters": {},
 
