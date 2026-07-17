@@ -13,9 +13,14 @@ RUN uv build --wheel
 FROM python:${PYTHON_VERSION}-slim
 WORKDIR /app
 
-# Install the model wheel (CPU torch by default).
-# For GPU support, override the base image to pytorch/pytorch:*-cuda*
-# or install torch with the CUDA extra.
+# Install torch. Default is CPU-only (small image, ~200 MB).
+# For GPU support, build with:
+#   docker build --build-arg TORCH_INDEX_URL=https://download.pytorch.org/whl/cu126 ...
+# Common CUDA indices:
+#   cu126 (CUDA 12.6), cu124 (CUDA 12.4), cu121 (CUDA 12.1)
+ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir torch --index-url "${TORCH_INDEX_URL}"
+
 COPY --from=builder /app/dist/*.whl /app/
 RUN WHEEL=$(ls /app/*.whl) && pip install --no-cache-dir "$WHEEL"
 
