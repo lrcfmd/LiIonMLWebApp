@@ -35,6 +35,19 @@ class LiIonModel:
             "LiIon model initializing",
             compute_device=str(self.compute_device),
         )
+        # Weights are loaded lazily on first process() call — the runner
+        # downloads declared assets to their paths before invoking the
+        # handler, so the .pth files are not available at import time.
+        self.crabnet_reg = None
+        self.crabnet_cls = None
+        self._loaded = False
+
+    # -- Loading ----------------------------------------------------------
+
+    def _ensure_loaded(self):
+        """Load CrabNet weights on first use (after runner downloads assets)."""
+        if self._loaded:
+            return
 
         models_dir = Path(
             os.environ.get("LIION_MODELS_PATH", "data/trained_models")
@@ -46,8 +59,7 @@ class LiIonModel:
             models_dir / "TransferFinalModel_Clf.pth", classification=True
         )
         self.logger.info("LiIon model loaded", models=str(models_dir))
-
-    # -- Loading ----------------------------------------------------------
+        self._loaded = True
 
     def _load_model(self, path: Path, classification: bool) -> Model:
         """Load a CrabNet model checkpoint."""
@@ -78,6 +90,7 @@ class LiIonModel:
         logger,
     ) -> dict:
         """Run the selected mode."""
+        self._ensure_loaded()
         if mode == "instance":
             return self._predict_single(values, logger)
         elif mode == "dataset":
