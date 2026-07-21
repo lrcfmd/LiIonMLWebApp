@@ -105,6 +105,10 @@ class ModelRunner:
             "Built Output JSON", value_fields=len(value_outputs), assets=len(output_json) - len(value_outputs)
         )
 
+        # Write value outputs to result.json so the orchestrator can read them
+        result_path = OUTPUT_DIR / "result.json"
+        result_path.write_text(json.dumps(value_outputs))
+
         print(json.dumps(output_json))
 
     def _parse_args(self, args: list[str] | None) -> argparse.Namespace:
