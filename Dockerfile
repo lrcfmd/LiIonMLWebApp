@@ -28,7 +28,12 @@ RUN WHEEL=$(ls /app/*.whl) && pip install --no-cache-dir "$WHEEL"
 # via the LMDS tool assets system (see schema/model.json → assets).
 # Do not COPY them here — they are downloaded into /app/data/ when a run starts.
 
-RUN mkdir -p /app/data/output /app/data/trained_models /app/data/element_properties
+RUN mkdir -p /app/data/output /app/data/trained_models /app/data/element_properties /home/lmds \
+    && groupadd lmds \
+    && useradd -g lmds -u 1000 -m -d /home/lmds lmds \
+    && chown -R 1000:1000 /app /home/lmds
 ENV LIION_MODELS_PATH=/app/data/trained_models
+
+USER 1000:1000
 
 ENTRYPOINT ["model-run"]
